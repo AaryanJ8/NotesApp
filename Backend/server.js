@@ -15,11 +15,17 @@ mongoose.connection.once("open", () => {
 });
 
 // When localhost:8081/fetch is pinged return all items in the Data collection
-app.get('/fetch', (req, res) => {
-    Data.find({}).then((notes) => { // return all items in the datas collection
-        res.send(notes)
-    });
+router.get('/fetch', async (req, res) => {
+    try {
+        const notes = await Data.find({});
+        res.json(notes);
+    } catch (error) {
+        // Handle errors here
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 });
+
 
 // When the delete route is called seach the database using the ID header and delete that item
 app.post('/delete', async (req, res) => {
