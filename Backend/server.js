@@ -51,18 +51,29 @@ app.post('/delete', async (req, res) => {
   });
 
 // To update, look for the item with the given ID and update all the vakues with the new header values
-app.post('/update', (req, res) => {
-    Data.update({
-        _id: req.get("id")
-    }, {
+app.post('/update', async (req, res) => {
+    try {
+      const id = req.get("id");
+      const newData = {
         date: req.get("date"),
         title: req.get("title"),
         note: req.get("note")
-    }, {
-        upsert: true
-    }, (err) => {})
-    res.send("Done")
-});
+      };
+  
+      // Use await to update the data
+      const updatedData = await Data.findOneAndUpdate(
+        { _id: id },
+        newData,
+        { upsert: true, new: true } // Set new to true to return the updated data
+      );
+  
+      // Send a response with the updated data or a success message
+      res.json(updatedData || { message: 'Done' });
+    } catch (err) {
+      // Handle errors appropriately
+      res.status(500).json({ error: 'An error occurred' });
+    }
+  });
 
 // Create a new data object with the headers and input it into the DB
 app.post("/form", (req, res) => {
