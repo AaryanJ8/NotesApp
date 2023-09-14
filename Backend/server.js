@@ -76,14 +76,27 @@ app.post('/update', async (req, res) => {
   });
 
 // Create a new data object with the headers and input it into the DB
-app.post("/form", (req, res) => {
-    var data = new Data({ note: req.get("note"), title: req.get("title"), date: req.get("date") })
-    res.send("Done")
-    data.save().then(() => {
-        assert(data.isNew == false);
-    });
-    console.log("Saved");
-})
+app.post("/form", async (req, res) => {
+    try {
+      const newData = new Data({
+        note: req.get("note"),
+        title: req.get("title"),
+        date: req.get("date")
+      });
+  
+      await newData.save();
+  
+      // Send a response only after the data is saved
+      res.send("Done");
+  
+      // This code will only run after the data is successfully saved
+      console.log("Saved");
+    } catch (err) {
+      // Handle errors appropriately
+      res.status(500).json({ error: 'An error occurred' });
+    }
+  });
+  
 
 // Start the server on localhost:8081
 var server = app.listen(8081, () => {
