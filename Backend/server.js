@@ -99,8 +99,9 @@ app.post("/form", async (req, res) => {
   
 
 // Start the server on localhost:8081
-var server = app.listen(8081, () => {
-    var host = server.address().address;
-    var port = server.address().port;
-    console.log("Example app listening at http://%s:%s", host, port);
+const port = 8081;
+
+const server = app.listen(port, () => {
+  const { address, port } = server.address();
+  console.log(`Example app listening at http://${address}:${port}`);
 });
