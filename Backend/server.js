@@ -15,7 +15,7 @@ mongoose.connection.once("open", () => {
 });
 
 // When localhost:8081/fetch is pinged return all items in the Data collection
-router.get('/fetch', async (req, res) => {
+app.get('/fetch', async (req, res) => {
     try {
         const notes = await Data.find({});
         res.json(notes);
